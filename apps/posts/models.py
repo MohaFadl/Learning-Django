@@ -7,7 +7,7 @@ class Post(models.Model):
     
     class Status(models.TextChoices):
         Draft = 'DF' , 'Draft',
-        PUBLISHED = 'PB' , 'PUBLISHED'
+        PUBLISHED = 'PB' , 'Published'
         
         
         
@@ -31,10 +31,13 @@ class Post(models.Model):
     """
     
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='blog_posts'
+        settings.AUTH_USER_MODEL, # what model do you want to connect to
+        on_delete=models.CASCADE, # delete all posts if i delete the user
+        related_name='blog_posts' # name of reverse releation user.blog_posts
+        
     )
+    
+    
     class Meta:
         ordering = ['-publish']
         indexes = [
