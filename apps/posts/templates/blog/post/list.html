@@ -1,20 +1,191 @@
 {% extends "blog/base.html" %}
-{% block title %}My Blog{% endblock %}
-{% block content %}
-  <h1 style="font-size: 2rem; font-weight: 700; color: var(--accent);">📜 Latest Posts</h1>
 
-  {% for post in posts %}
-    <div class="post-card">
-      <h3>
-        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-      </h3>
-      <div class="meta">
-        Published {{ post.publish|date:"M d, Y" }} • by <strong>{{ post.author }}</strong>
-      </div>
-      <p>{{ post.body|truncatewords:30|linebreaks }}</p>
-      <a href="{{ post.get_absolute_url }}" style="display: inline-block; margin-top: 1rem; font-weight: 600;">Read more →</a>
+{% block title %}My Blog{% endblock %}
+
+{% block content %}
+<header class="blog-header">
+  <h1>Latest Posts</h1>
+</header>
+
+<main class="main-content">
+  {% if posts %}
+    <div class="posts-grid">
+      {% for post in posts %}
+        <article class="post-card">
+          <h2 class="post-title">
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+          </h2>
+          <div class="post-meta">
+            {{ post.publish|date:"F d, Y" }} • <strong>{{ post.author }}</strong>
+          </div>
+          <p class="post-excerpt">{{ post.body|truncatewords:40|linebreaks }}</p>
+          <a href="{{ post.get_absolute_url }}" class="read-more">Read more</a>
+        </article>
+      {% endfor %}
     </div>
-  {% empty %}
-    <p>No posts yet.</p>
-  {% endfor %}
+  {% else %}
+    <p class="no-posts">No posts yet. Check back later.</p>
+  {% endif %}
+</main>
+
+{% include "blog/post/pagination.html" with page=posts %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* --- Header --- */
+.blog-header {
+  margin-bottom: 3rem;
+}
+
+.blog-header h1 {
+  font-size: 2.75rem;
+  font-weight: 900;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 0;
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInDown 0.8s ease forwards;
+}
+
+/* --- Main content spacing --- */
+.main-content {
+  padding: 0 1rem;
+}
+
+/* --- Grid --- */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem 2rem; /* row 3rem, column 2rem */
+}
+
+/* --- Post Card --- */
+.post-card {
+  background: var(--card-bg);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, rgba(99,102,241,0.1), rgba(79,70,229,0.1));
+  transform: rotate(0deg);
+  transition: transform 0.7s ease;
+  z-index: 0;
+}
+
+.post-card:hover::before {
+  transform: rotate(180deg);
+}
+
+.post-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.15);
+}
+
+/* --- Title --- */
+.post-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.post-title a {
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.3s ease;
+}
+
+.post-title a:hover {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Meta --- */
+.post-meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1.25rem;
+  z-index: 1;
+  position: relative;
+}
+
+/* --- Excerpt --- */
+.post-excerpt {
+  line-height: 1.75;
+  color: #374151;
+  z-index: 1;
+  position: relative;
+}
+
+/* --- Read More --- */
+.read-more {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.read-more::after {
+  content: " →";
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.read-more:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* --- No posts --- */
+.no-posts {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-top: 2rem;
+  animation: fadeIn 1s ease forwards;
+}
+
+/* --- Animations --- */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem 2rem;
+  }
+}
+</style>
+{% include "blog/post/pagination.html" with page=posts %}
+
 {% endblock %}

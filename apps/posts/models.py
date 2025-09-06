@@ -13,13 +13,13 @@ class Post(models.Model):
     #A nice way to do TextChoices
     
     class Status(models.TextChoices):
-        Draft = 'DF' , 'Draft',
-        PUBLISHED = 'PB' , 'Published'
+        Draft = 'DF', 'Draft'
+        PUBLISHED = 'PB', 'Published'
         
         
         
     title = models.CharField(max_length = 250)
-    slug = models.SlugField(max_length = 250 , unique_for_date='published')
+    slug = models.SlugField(max_length = 250 , unique_for_date='publish')
     content = models.TextField()
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
