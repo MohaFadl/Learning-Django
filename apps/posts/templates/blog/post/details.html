@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+  <article class="post-card">
+    <h1 style="font-size: 2.2rem; font-weight: 700; color: var(--accent); margin-bottom: 1rem;">
+      {{ post.title }}
+    </h1>
+    <p class="meta">
+      📅 Published {{ post.publish|date:"M d, Y" }} • ✍️ by <strong>{{ post.author }}</strong>
+    </p>
+    <div style="margin-top: 1.5rem; font-size: 1.1rem; line-height: 1.8;">
+      {{ post.body|linebreaks }}
+    </div>
+  </article>
+{% endblock %}

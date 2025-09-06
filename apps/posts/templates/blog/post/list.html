@@ -1,0 +1,20 @@
+{% extends "blog/base.html" %}
+{% block title %}My Blog{% endblock %}
+{% block content %}
+  <h1 style="font-size: 2rem; font-weight: 700; color: var(--accent);">📜 Latest Posts</h1>
+
+  {% for post in posts %}
+    <div class="post-card">
+      <h3>
+        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+      </h3>
+      <div class="meta">
+        Published {{ post.publish|date:"M d, Y" }} • by <strong>{{ post.author }}</strong>
+      </div>
+      <p>{{ post.body|truncatewords:30|linebreaks }}</p>
+      <a href="{{ post.get_absolute_url }}" style="display: inline-block; margin-top: 1rem; font-weight: 600;">Read more →</a>
+    </div>
+  {% empty %}
+    <p>No posts yet.</p>
+  {% endfor %}
+{% endblock %}
